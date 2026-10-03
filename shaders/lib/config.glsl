@@ -69,7 +69,7 @@ Javier Garduño - GNU Lesser General Public License v3.0
 #define WATER_ABSORPTION 0.10 // [0.02 0.04 0.06 0.08 0.10 0.12 0.14 0.16 0.18 0.20 0.22 0.24 0.26 0.28 0.30 0.32 0.34 0.36 0.38 0.40 0.42 0.44 0.46 0.48 0.50 0.52 0.54 0.56 0.58 0.60 0.62 0.64 0.66 0.68 0.70 0.72 0.74 0.76 0.78 0.80] Sets how much light the water absorbs. Low levels make the water more transparent. High levels make it more opaque.
 #define COLOR_SCHEME 1 // [0 1 2 3 4 5 6 7 99] Ethereal: Old default theme. New shoka: Reinterpretation of a classic. Shoka: The classic. Legacy: Very old default. Captain: A cold preset of stylish colors. Psycodelic: Remaster of old vivid scheme. Cocoa: Warm theme. Testigo: Fantasy and cute scheme. Custom: Choose your colors in advanced options.
 #define WATER_TEXTURE 0 // [0 1] Enable or disable resource pack water texture. It does not work properly in 1.12. In that case the default value is recommended.
-#define AVOID_DARK_LEVEL 0.030 // [0.000 0.005 0.010 0.015 0.020 0.025 0.030 0.035 0.040 0.045 0.050 0.055 0.060]  Minimal omni light intensity in caves.
+#define AVOID_DARK_LEVEL 0.005 // [0.000 0.005 0.010 0.015 0.020 0.025 0.030 0.035 0.040 0.045 0.050 0.055 0.060]  Minimal omni light intensity in caves.
 #define NIGHT_BRIGHT 0.60 // [0.05 0.10 0.15 0.20 0.25 0.30 0.35 0.40 0.45 0.50 0.55 0.60 0.65 0.70] Adjusts the brightness of the night light in exteriors.
 #define V_CLOUDS 1 // [0 1 2] Volumetric static: The clouds move, but they keep their shape. Volumetric dynamic: Clouds change shape over time, a different cloud landscape every time (medium performance hit). Vanilla: Original vanilla clouds.
 #define CLOUD_VOL_STYLE 0 // [0 1] Set the volumetric cloud style.
@@ -86,7 +86,7 @@ Javier Garduño - GNU Lesser General Public License v3.0
 #define WATER_TURBULENCE 0.9 // [7.0 1.75 0.9 0.5] Set the water waves strength.
 #define FOG_ADJUST 2.0 // [10.0 8.0 4.0 2.0 1.0]  Sets the fog strength
 // #define DEBUG_MODE // Set debug mode.
-#define BLOCKLIGHT_TEMP 1 // [0 1 2 3 4] Set blocklight temperature
+#define BLOCKLIGHT_TEMP 4 // [0 1 2 3 4] Set blocklight temperature
 #define MATERIAL_GLOSS // A very subtle effect that adds some ability to reflect direct light on some blocks. It is most noticeable on metals and luminous objects.
 #define DYN_HAND_LIGHT // Toggle the fake dynamic light
 // #define IMAGE_SHARPENING
