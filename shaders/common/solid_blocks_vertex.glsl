@@ -89,6 +89,7 @@ varying vec3 omniLight;
 
 #if defined GBUFFER_TERRAIN || defined GBUFFER_HAND || defined GBUFFER_ENTITIES
     varying float isEmissiveEntity;
+    varying float isOre;
 #endif
 
 #ifdef FOLIAGE_V
@@ -150,6 +151,7 @@ void main() {
     // Glowing blocks
     #if defined GBUFFER_TERRAIN || defined GBUFFER_HAND || defined GBUFFER_ENTITIES
         isEmissiveEntity = 0.0;
+        isOre = float(mc_Entity.x == ENTITY_ORE);
         if(mc_Entity.x == ENTITY_NO_SHADOW_FIRE || mc_Entity.x == ENTITY_EMMISIVE || mc_Entity.x == ENTITY_S_EMMISIVE) {
             isEmissiveEntity = 1.0;
         }

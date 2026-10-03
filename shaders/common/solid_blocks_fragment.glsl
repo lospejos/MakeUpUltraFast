@@ -90,6 +90,7 @@ varying vec3 omniLight;
 
 #if defined GBUFFER_TERRAIN || defined GBUFFER_HAND || defined GBUFFER_ENTITIES
     varying float isEmissiveEntity;
+    varying float isOre;
 #endif
 
 #ifdef FOLIAGE_V
@@ -167,6 +168,13 @@ void main() {
     #endif
 
     float block_luma = luma(blockColor.rgb);
+
+    vec3 oreGlow = vec3(0.0);
+    #if defined GBUFFER_TERRAIN || defined GBUFFER_HAND || defined GBUFFER_ENTITIES
+        // Colorful (non-stone) ore pixels glow
+        float oreMask = isOre * smoothstep(0.12, 0.25, max(blockColor.r, max(blockColor.g, blockColor.b)) - min(blockColor.r, min(blockColor.g, blockColor.b)));
+        oreGlow = blockColor.rgb * oreMask * ORE_GLOW;
+    #endif
 
     float isEmissiveEntityLocal = 0.0;
     #if defined GBUFFER_ENTITIES
@@ -252,6 +260,8 @@ void main() {
 
         blockColor.rgb *= mix(realLight, vec3(1.0), nightVision * 0.125);
         blockColor.rgb *= mix(vec3(1.0, 1.0, 1.0), vec3(NV_COLOR_R, NV_COLOR_G, NV_COLOR_B), nightVision);
+
+        blockColor.rgb += oreGlow;
 
         // DEBUG
         // blockColor = vec4(vec3(directLightStrength), 1.0);

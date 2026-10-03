@@ -16,6 +16,7 @@ Javier Garduño - GNU Lesser General Public License v3.0
 #define ENTITY_S_EMMISIVE     10090.0  // Emissors
 #define ENTITY_F_EMMISIVE     10213.0  // Fake emissors
 #define ENTITY_NO_SHADOW_FIRE 10214.0  // Fire (no shadow)
+#define ENTITY_ORE            10091.0  // Ores
 #define ENTITY_WATER          10008.0  // Water
 #define ENTITY_PORTAL         10090.0  // Portal
 #define ENTITY_STAINED        10079.0  // Glass
@@ -24,6 +25,7 @@ Javier Garduño - GNU Lesser General Public License v3.0
 #define ENTITY_FABRIC         10440.0  // Fabric-like glossy blocks
 
 // Other constants
+#define ORE_GLOW 0.8  // Ore glow strength (0.0 = off)
 #define ZENITH_SKY_RAIN_COLOR vec3(.7, .85, 1.0)
 #define HORIZON_SKY_RAIN_COLOR vec3(0.35 , 0.425, 0.5)
 
