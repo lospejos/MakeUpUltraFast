@@ -92,6 +92,8 @@ varying vec3 omniLight;
     varying float isOre;
 #endif
 
+varying float isEndPortal;
+
 #ifdef FOLIAGE_V
     varying float isFoliage;
 #endif
@@ -112,6 +114,7 @@ varying vec3 omniLight;
 #endif
 
 attribute vec4 mc_Entity;
+attribute int blockEntityId;
 
 #if WAVING == 1
     attribute vec2 mc_midTexCoord;
@@ -148,7 +151,7 @@ void main() {
     #include "/src/light_vertex.glsl"
     #include "/src/fog_vertex.glsl"
 
-    // Glowing blocks
+    // Glowing and special blocks
     #if defined GBUFFER_TERRAIN || defined GBUFFER_HAND || defined GBUFFER_ENTITIES
         isEmissiveEntity = 0.0;
         isOre = float(mc_Entity.x == ENTITY_ORE);
@@ -156,6 +159,12 @@ void main() {
             isEmissiveEntity = 1.0;
         }
     #endif
+
+    // Portal like flag
+    isEndPortal = 0.0;
+    if (blockEntityId == ENTITY_PORTAL || mc_Entity.x == ENTITY_PORTAL) {
+        isEndPortal = 1.0;
+    }
 
     #if defined SHADOW_CASTING && !defined NETHER
         #include "/src/shadow_src_vertex.glsl"

@@ -21,6 +21,9 @@ uniform float dayNightMix;
 uniform float pixelSizeX;
 uniform float pixelSizeY;
 uniform sampler2D gaux4;
+uniform float frameTimeCounter;
+uniform mat4 gbufferProjectionInverse;
+uniform mat4 gbufferModelViewInverse;
 
 #if defined DISTANT_HORIZONS
     uniform float dhNearPlane;
@@ -62,11 +65,13 @@ uniform float blindness;
 #endif
 
 #if SHADOW_LOCK > 0 && defined SHADOW_CASTING
-    uniform vec3 cameraPosition;
+    // uniform vec3 cameraPosition;
     uniform mat4 shadowModelView;
     uniform mat4 shadowProjection;
     uniform vec3 shadowLightPosition;
 #endif
+
+uniform vec3 cameraPosition;
 
 #if defined THE_END || (SHADOW_LOCK > 0 && defined SHADOW_CASTING && !defined NETHER)
     uniform mat4 gbufferModelView;
@@ -93,6 +98,8 @@ varying vec3 omniLight;
     varying float isOre;
 #endif
 
+varying float isEndPortal;  // END PORTAL LIKE NEEDED
+
 #ifdef FOLIAGE_V
     varying float isFoliage;
 #endif
@@ -115,8 +122,12 @@ varying vec3 omniLight;
 /* Utility functions */
 
 #if (defined SHADOW_CASTING && !defined NETHER) || defined DISTANT_HORIZONS
-    #include "/lib/dither.glsl"
+    // #include "/lib/dither.glsl"  // RELOCATED BY END PORTAL
 #endif
+
+// END PORTAL LIKE NEEDED
+#include "/lib/basic_utils.glsl"
+#include "/lib/dither.glsl"
 
 #if defined SHADOW_CASTING && !defined NETHER
     #include "/lib/shadow_frag.glsl"
@@ -131,6 +142,9 @@ varying vec3 omniLight;
 #if defined SHADOW_CASTING && SHADOW_LOCK > 0 && !defined NETHER
     #include "/lib/shadow_vertex.glsl"
 #endif
+
+// END PORTAL LIKE NEEDED
+#include "/lib/end_portal.glsl"
 
 void main() {
     #if (defined SHADOW_CASTING && !defined NETHER) || defined DISTANT_HORIZONS
@@ -201,6 +215,19 @@ void main() {
         }
     #endif
 
+    // NEW GLINT METHOD IN IRIS (MC >= 26.3)
+    #ifdef IRIS_INLINE_GLINT
+        if (mc_hasGlint()) {
+            vec3 glint = mc_sampleGlint();
+            blockColor.rgb += glint;
+        }
+    #endif
+
+    // END PORTAL LIKE
+    if(isEndPortal > 0.5) {
+        blockColor.rgb = endPortal();
+    }
+
     #if defined SHADOW_CASTING && !defined NETHER
         #if SHADOW_LOCK > 0
             vec3 offsetVector = vNormal * 0.002;
@@ -231,7 +258,7 @@ void main() {
         blockColor.rgb *= 1.5;
     #elif defined GBUFFER_ENTITY_GLOW
         blockColor.rgb =
-            clamp(vec3(luma(blockColor.rgb)) * vec3(0.75, 0.75, 1.5), vec3(0.3), vec3(1.0));
+            clamp(vec3(luma(blockColor.rgb)) * vec3(0.75, 0.75, 1.5), vec3(0.3), vec3(1.0));        
         vec3 realLight = omniLight +
                 (shadowValue * directLightColor * directLightStrength) * (1.0 - (rainStrength * 0.75)) +
                 finalCandleColor;
@@ -262,9 +289,6 @@ void main() {
         blockColor.rgb *= mix(vec3(1.0, 1.0, 1.0), vec3(NV_COLOR_R, NV_COLOR_G, NV_COLOR_B), nightVision);
 
         blockColor.rgb += oreGlow;
-
-        // DEBUG
-        // blockColor = vec4(vec3(directLightStrength), 1.0);
     #endif
 
     #if defined GBUFFER_ENTITIES
@@ -282,10 +306,6 @@ void main() {
     #if MC_VERSION < 11300 && defined GBUFFER_TEXTURED
         blockColor.rgb *= 1.5;
     #endif
-
-    // DEBUG
-    // blockColor = vec4(omniLight, 1.0);
-    // blockColor = vec4(vec3(directLightStrength), 1.0);
 
     #include "/src/finalcolor.glsl"
     #include "/src/writebuffers.glsl"
