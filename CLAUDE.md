@@ -14,7 +14,9 @@ The user's own Prism instance may load a stale copy of the pack, so judge by the
   on the quad does not help. The pack draws a procedural disk instead (quad geometry via
   `quad_xy` / `quad_corner` varyings, sizes `SUN_SIZE` / `MOON_SIZE`, both tuned to match the
   Complementary Unbound angular size).
-- Moon: lit sphere driven by `moonPhase`, procedural maria and craters. Sun: flat warm disk.
+- Moon: soft glowing crescent driven by `moonPhase` (disk minus an offset dark disk, plus a halo), no craters,
+  like Complementary Unbound. Sun: flat warm disk. Dimming knobs: the `* 0.6` color factor and `halo = 0.16`
+  in `skytextured_fragment.glsl`; star color in `skybasic_fragment.glsl`.
 - `gl_FragDepth = 1.0` is written so the sky-only cloud pass in `deferred_fragment.glsl`
   (`linearDepth > 0.9999`) also covers the sun/moon (clouds must hide the sun).
 - Stars (`skybasic_fragment.glsl`): use their own light color; before, they took the sky color and were invisible.

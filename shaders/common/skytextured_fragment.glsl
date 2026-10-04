@@ -73,24 +73,17 @@ void main() {
         if (is_sun > 0.5) {
             disk_color = vec3(1.0, 0.93, 0.80) * (1.0 + 0.25 * (1.0 - r2));
         } else {
-            // Lit sphere: moonPhase 0 full, 4 new, 1-3 waning (lit left), 5-7 waxing (lit right)
-            vec3 n = vec3(p, sqrt(max(0.0, 1.0 - r2)));
+            // Soft crescent: disk minus an offset dark disk. moonPhase 0 full, 4 new,
+            // 1-3 waning (lit left), 5-7 waxing (lit right)
             float phase_angle = float(moonPhase) * 0.7853982;
-            vec3 light_dir = vec3(-sin(phase_angle), 0.0, cos(phase_angle));
-            float n_dot_l = dot(n, light_dir);
-            float lit = smoothstep(-0.02, 0.06, n_dot_l) * (0.55 + 0.45 * pow(max(n_dot_l, 0.0), 0.4));
-
-            // Surface: maria + craters
-            float maria = vnoise(p * 1.8 + 7.0) * 0.6 + vnoise(p * 4.5) * 0.4;
-            float albedo = 0.95 - 0.55 * smoothstep(0.38, 0.62, maria);
-            vec2 g = p * 3.5;
-            vec2 cell = floor(g);
-            vec2 h = hash22(cell);
-            float d = length(fract(g) - 0.5 - (h - 0.5) * 0.5);
-            float crater = step(0.4, h.x) * (smoothstep(0.24, 0.14, d) * 0.3 - smoothstep(0.24, 0.27, d) * smoothstep(0.32, 0.27, d) * 0.12);
-            albedo -= crater;
-
-            disk_color = vec3(0.95, 0.97, 1.0) * 0.75 * albedo * (0.03 + 0.97 * lit);
+            float frac = 0.5 + 0.5 * cos(phase_angle);  // illuminated fraction
+            float side = sin(phase_angle) >= 0.0 ? 1.0 : -1.0;
+            float dark_dist = length(p - vec2(side * 2.2 * frac, 0.0));
+            float lit = smoothstep(0.8, 1.1, dark_dist);
+            float body = (1.0 - smoothstep(0.75, 1.05, sqrt(r2))) * lit;
+            float halo = 0.16 * (0.3 + 0.7 * frac) * mix(0.15, 1.0, lit) * exp(-3.0 * max(sqrt(r2) - 0.9, 0.0));
+            disk = clamp(body + halo * (1.0 - body), 0.0, 1.0);
+            disk_color = vec3(0.95, 0.97, 1.0) * 0.6;
         }
 
         blockColor = vec4(disk_color * tintColor.rgb * sky_luma_correction, disk);

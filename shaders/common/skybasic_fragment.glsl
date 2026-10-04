@@ -91,7 +91,7 @@ void main() {
     #if MC_VERSION >= 11604
         // Stars: own light color (not the sky color) so they stay visible
         vec3 sky_rgb = texture2D(gaux4, gl_FragCoord.xy * vec2(pixelSizeX, pixelSizeY)).rgb;
-        blockColor.rgba = vec4(mix(sky_rgb, vec3(0.9, 0.93, 1.0), step(0.001, star_data.a)), clamp(star_data.a * 2.0, 0.0, 1.0));
+        blockColor.rgba = vec4(mix(sky_rgb, vec3(0.6, 0.63, 0.7), step(0.001, star_data.a)), clamp(star_data.a * 2.0, 0.0, 1.0));
     #endif
 
     #include "/src/writebuffers.glsl"
