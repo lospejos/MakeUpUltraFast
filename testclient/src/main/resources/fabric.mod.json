@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "id": "shadertest",
+  "version": "1.0",
+  "environment": "client",
+  "entrypoints": { "fabric-client-gametest": ["shadertest.ShaderTest"] },
+  "depends": { "fabric-api": "*" }
+}
